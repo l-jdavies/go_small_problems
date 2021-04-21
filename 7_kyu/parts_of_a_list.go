@@ -1,0 +1,54 @@
+/*
+Write a function partlist that gives all the ways to divide a list (an array) of at least two elements into two non-empty parts.
+
+Each two non empty parts will be in a pair (or an array for languages without tuples or a structin C - C: see Examples test Cases - )
+Each part will be in a string
+Elements of a pair must be in the same order as in the original array.
+Examples of returns in different languages:
+a = ["az", "toto", "picaro", "zone", "kiwi"] -->
+[["az", "toto picaro zone kiwi"], ["az toto", "picaro zone kiwi"], ["az toto picaro", "zone kiwi"], ["az toto picaro zone", "kiwi"]]
+or
+ a = {"az", "toto", "picaro", "zone", "kiwi"} -->
+{{"az", "toto picaro zone kiwi"}, {"az toto", "picaro zone kiwi"}, {"az toto picaro", "zone kiwi"}, {"az toto picaro zone", "kiwi"}}
+or
+a = ["az", "toto", "picaro", "zone", "kiwi"] -->
+[("az", "toto picaro zone kiwi"), ("az toto", "picaro zone kiwi"), ("az toto picaro", "zone kiwi"), ("az toto picaro zone", "kiwi")]
+or
+a = [|"az", "toto", "picaro", "zone", "kiwi"|] -->
+[("az", "toto picaro zone kiwi"), ("az toto", "picaro zone kiwi"), ("az toto picaro", "zone kiwi"), ("az toto picaro zone", "kiwi")]
+or
+a = ["az", "toto", "picaro", "zone", "kiwi"] -->
+"(az, toto picaro zone kiwi)(az toto, picaro zone kiwi)(az toto picaro, zone kiwi)(az toto picaro zone, kiwi)"*/
+
+package main
+
+import (
+	"fmt"
+	"strings"
+)
+
+func PartList(arr []string) (result string) {
+	a := []string{}
+
+	for outer := 0; len(a) < len(arr)-1; outer++ {
+		str := "("
+		for inner, word := range arr {
+			if inner == outer {
+				str += string(word) + ", "
+			} else {
+				str += string(word) + " "
+			}
+		}
+		str = strings.TrimRight(str, " ")
+		str += ")"
+		a = append(a, str)
+
+	}
+
+	result = strings.Join(a, "")
+	return
+}
+
+func main() {
+	fmt.Println(PartList([]string{"I", "wish", "I", "hadn't", "come"}) == "(I, wish I hadn't come)(I wish, I hadn't come)(I wish I, hadn't come)(I wish I hadn't, come)")
+}
