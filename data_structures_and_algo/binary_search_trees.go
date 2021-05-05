@@ -61,7 +61,7 @@ func (n *node) search(k int) bool {
 
 func (n *node) delete(k int) *node {
 	if n == nil {
-		return n
+		return &node{}
 	}
 
 	if k < n.key {
@@ -83,7 +83,7 @@ func (n *node) delete(k int) *node {
 		}
 	}
 
-	return n
+	return &node{}
 }
 
 func lift(node, nodeToDelete *node) *node {
@@ -125,5 +125,10 @@ func main() {
 	binarySearch.traverseTree()
 	binarySearch.delete(5) // 1 should replace 5
 	binarySearch.traverseTree()
-	//	binarySearch.delete(100)
+	binarySearch.delete(200)
+	binarySearch.traverseTree()
+
+	// deleting root doesn't work as expected - the root's right child is deleted
+	binarySearch.delete(100)
+	binarySearch.traverseTree()
 }
