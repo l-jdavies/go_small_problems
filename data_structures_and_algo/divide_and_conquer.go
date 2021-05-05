@@ -54,10 +54,10 @@ func maxSubArray(nums []int) int {
 		return nums[0]
 	}
 
-	next := maxSubArray(nums[1:])
-	otherNext := maxSubArray(nums[:len(nums)-1])
+	startSub := maxSubArray(nums[1:])
+	endSub := maxSubArray(nums[:len(nums)-1])
 
-	val := []int{sum, next, otherNext}
+	val := []int{sum, startSub, endSub}
 	sort.Ints(val)
 
 	return val[len(val)-1]
