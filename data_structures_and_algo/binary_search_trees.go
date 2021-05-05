@@ -60,23 +60,77 @@ func (n *node) search(k int) bool {
 }
 
 func (n *node) delete(k int) {
-	if n == nil {
-		return
+	toDelete, parent := n.findNodeAndParent(k, &node{}) // pass in empty node as parent
+
+	fmt.Println(toDelete, parent)
+	if toDelete.left == nil && toDelete.right == nil { // toDelete has no children
+		removeNode(toDelete, parent)
 	}
 
-	if k < n.key {
-		n.left.delete(k)
-	} else if k > n.key {
-		n.right.delete(k)
-	} else if k == n.key {
-		if n.left == nil {
-			n = n.right
-			return
-		} else if n.right == nil {
-			n = n.left
-			return
-		}
+	if toDelete.hasBothChildren() {
+		// implement
+	} else if toDelete.hasLeftLeaf() { // left child is end of tree
+		toDelete.replaceNode(toDelete.left, parent)
+	} else if toDelete.hasRightLeaf() { // right child is end of tree
+		toDelete.replaceNode(toDelete.right, parent)
+	} else {
+
 	}
+}
+
+func (n *node) replaceNode(replacement, parent *node) {
+	if parent.left == n {
+		parent.left = replacement
+	} else if parent.right == n {
+		parent.right = replacement
+	}
+}
+
+func (n *node) hasBothChildren() bool {
+	return n.left != nil && n.right != nil
+}
+
+func (n *node) hasLeftLeaf() bool {
+	return n.left != nil && n.left.left == nil && n.left.right == nil
+}
+
+func (n *node) hasRightLeaf() bool {
+	return n.right != nil && n.right.left == nil && n.right.right == nil
+}
+
+func removeNode(target, parent *node) {
+	if parent.left == target {
+		parent.left = nil
+	} else if parent.right == target {
+		parent.right = nil
+	}
+}
+
+func (n *node) findNodeAndParent(k int, p *node) (target, parent *node) {
+	if n.key < k {
+		if n.right.key == k {
+			target = n.right
+			parent = n
+			fmt.Println("right is match", n.right, n)
+			//return
+		} else {
+			n.right.findNodeAndParent(k, n)
+		}
+	} else if n.key > k {
+		if n.left.key == k {
+			target = n.left
+			parent = n
+			fmt.Println("left is match", target, parent)
+			//return
+		} else {
+			n.left.findNodeAndParent(k, n)
+		}
+	} else {
+		target = n
+		parent = p
+	}
+
+	return
 }
 
 // print all nodes, starting from root
@@ -98,10 +152,15 @@ func main() {
 	binarySearch.insert(10)
 	binarySearch.insert(50)
 	binarySearch.insert(3000)
-	binarySearch.traverseTree()
+	binarySearch.insert(5)
+	binarySearch.insert(200)
+	binarySearch.insert(5000)
+	binarySearch.insert(1)
 	//fmt.Println(binarySearch.search(50))
 	//fmt.Println(binarySearch.search(5))
 
-	binarySearch.delete(3000)
 	binarySearch.traverseTree()
+	binarySearch.delete(5) // 1 should replace 5
+	binarySearch.traverseTree()
+	//	binarySearch.delete(100)
 }
